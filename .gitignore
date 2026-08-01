@@ -1,43 +1,37 @@
-reserve.md
-HELP.md
-.gradle
-google-services.json
+# Gradle
+.gradle/
 build/
+app/build/
 app/release/
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
+# IDE
+.idea/
 *.iml
+*.iws
 *.ipr
 out/
+.cxx/
+.externalNativeBuild/
 
-### Android Studio ###
+# Android
 local.properties
 captures/
-.externalNativeBuild
-.cxx
+google-services.json
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+# Kotlin
+.kotlin/
 
-### VS Code ###
+# Allure
+allure-results/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# VS Code
 .vscode/
 
-### Package Files ###
+# Package Files
 *.jar
 *.war
 *.nar
@@ -46,5 +40,9 @@ captures/
 *.tar.gz
 *.rar
 
-### Gradle ###
+# Gradle wrapper
 !gradle/wrapper/gradle-wrapper.jar
+
+# Дополнительно
+reserve.md
+HELP.md
