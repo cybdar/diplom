@@ -10,6 +10,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import androidx.test.espresso.matcher.RootMatchers;
+
+import io.qameta.allure.kotlin.Allure;
 import ru.edu.qamid.R;
 
 public class AuthorizationPage {
@@ -18,32 +21,29 @@ public class AuthorizationPage {
     private final int passwordFieldId = R.id.password_edit_text;
     private final int signInButtonId = R.id.enter_button;
 
-    private void waitFor(int milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
     public AuthorizationPage enterLogin(String login) {
-        waitFor(5000);
-        onView(withId(loginFieldId)).check(matches(isDisplayed()));
+        Allure.step("Ввод логина: " + login);
         onView(withId(loginFieldId)).perform(clearText(), typeText(login), closeSoftKeyboard());
         return this;
     }
 
     public AuthorizationPage enterPassword(String password) {
-        waitFor(1000);
-        onView(withId(passwordFieldId)).check(matches(isDisplayed()));
+        Allure.step("Ввод пароля: " + password);
         onView(withId(passwordFieldId)).perform(clearText(), typeText(password), closeSoftKeyboard());
         return this;
     }
 
     public MainPage clickSignIn() {
-        waitFor(500);
-        onView(withId(signInButtonId)).check(matches(isDisplayed()));
+        Allure.step("Нажатие кнопки SIGN IN");
         onView(withId(signInButtonId)).perform(click());
         return new MainPage();
+    }
+
+    public AuthorizationPage checkErrorVisible(String errorText) {
+        Allure.step("Проверка ошибки: " + errorText);
+        onView(withText(errorText))
+                .inRoot(RootMatchers.isPlatformPopup())
+                .check(matches(isDisplayed()));
+        return this;
     }
 }
