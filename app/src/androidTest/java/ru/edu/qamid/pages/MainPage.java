@@ -45,6 +45,11 @@ public class MainPage {
         Allure.step("Выход из аккаунта");
         onView(withId(profileButtonId)).perform(click());
         onView(withText("Log out")).perform(click());
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return new AuthorizationPage();
     }
 }

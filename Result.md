@@ -32,7 +32,9 @@
    В Control Panel при фильтрации без выбора Active/Not active система показывает все новости.
 
 ## Allure
-Подключены зависимости `allure-kotlin-*` (версия 2.4.0), раннер `AllureAndroidJUnitRunner` в `build.gradle`, создан файл `allure.properties`. В коде использованы аннотации `@Epic`, `@Feature`, `@Story`, `@Description` и логирование `Allure.step()`. Папка `allure-results` не создалась из-за особенностей библиотеки на эмуляторе, поэтому отчёт Allure не был сгенерирован.
+Подключены зависимости `allure-kotlin-*` (2.4.0), раннер `AllureAndroidJUnitRunner` в `build.gradle`, создан `allure.properties`, добавлен флаг `android.injected.androidTest.leaveApksInstalledAfterRun=true`. В коде использованы аннотации `@Epic`, `@Feature`, `@Story`, `@Description` и логирование `Allure.step()`.
+
+Папка `allure-results` не создаётся: проверяла в `app/build/` после прогона, а также через `adb shell find` в `/sdcard`, `/storage`, `/data`. Проблема с библиотекой `allure-kotlin-android`.
 
 ## Вывод
 Автоматизация сократила время проверки приложения с 8 часов до 2 минут. Все 13 запланированных тестов проходят успешно. Найдены 3 бага, оформленные как Issues на GitHub.

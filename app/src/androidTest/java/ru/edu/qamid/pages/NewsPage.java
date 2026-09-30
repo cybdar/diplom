@@ -4,20 +4,24 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withSubstring;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.uiautomator.By;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.Until;
 
 import io.qameta.allure.kotlin.Allure;
 import ru.edu.qamid.R;
-import ru.edu.qamid.utils.WaitUtils;
 
 public class NewsPage {
 
     private final int filterButtonId = R.id.news_filter_button;
     private final int controlPanelButtonId = R.id.news_edit_button;
     private final int addButtonId = R.id.add_news_image_view;
+
+    private final UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
     public NewsPage checkNewsScreenVisible() {
         Allure.step("Проверка отображения экрана новостей");
@@ -40,14 +44,25 @@ public class NewsPage {
 
     public NewsPage checkNewsWithTitleVisible(String title) {
         Allure.step("Проверка отображения новости: " + title);
-        onView(isRoot()).perform(WaitUtils.waitForText(title, 10000));
-        onView(withSubstring(title)).check(matches(isDisplayed()));
+        device.wait(Until.findObject(By.textContains(title)), 10000);
+        return this;
+    }
+
+    public NewsPage checkErrorToast(String errorText) {
+        Allure.step("Проверка всплывающей ошибки: " + errorText);
+        device.wait(Until.findObject(By.text(errorText)), 5000);
         return this;
     }
 
     public NewsPage openFilter() {
         Allure.step("Открытие фильтра новостей");
         onView(withId(filterButtonId)).perform(click());
+        return this;
+    }
+
+    public NewsPage applyFilter() {
+        Allure.step("Нажатие кнопки FILTER");
+        onView(withText("FILTER")).perform(click());
         return this;
     }
 

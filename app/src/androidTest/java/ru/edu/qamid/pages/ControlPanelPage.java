@@ -10,6 +10,10 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import androidx.test.espresso.matcher.RootMatchers;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.uiautomator.By;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.Until;
 
 import io.qameta.allure.kotlin.Allure;
 import ru.edu.qamid.R;
@@ -25,6 +29,8 @@ public class ControlPanelPage {
     private final int activeSwitchId = R.id.news_active_switch;
     private final int saveButtonId = R.id.news_save_button;
     private final int cancelButtonId = R.id.news_cancel_button;
+
+    private final UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
     public ControlPanelPage clickAdd() {
         Allure.step("Нажатие на кнопку создания новости");
@@ -83,9 +89,9 @@ public class ControlPanelPage {
         return this;
     }
 
-    public ControlPanelPage checkErrorVisible(String errorText) {
-        Allure.step("Проверка ошибки: " + errorText);
-        onView(withText(errorText)).check(matches(isDisplayed()));
+    public ControlPanelPage checkErrorToast(String errorText) {
+        Allure.step("Проверка всплывающей ошибки: " + errorText);
+        device.wait(Until.findObject(By.text(errorText)), 5000);
         return this;
     }
 

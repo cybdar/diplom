@@ -1,9 +1,5 @@
 package ru.edu.qamid.tests;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Test;
@@ -14,7 +10,6 @@ import io.qameta.allure.kotlin.Description;
 import io.qameta.allure.kotlin.Epic;
 import io.qameta.allure.kotlin.Feature;
 import io.qameta.allure.kotlin.Story;
-import ru.edu.qamid.pages.NewsPage;
 import ru.edu.qamid.utils.TestData;
 
 @RunWith(AndroidJUnit4.class)
@@ -34,18 +29,19 @@ public class NewsTests extends BaseTest {
     @Story("Создание новости")
     @Description("Проверка создания новости со всеми заполненными полями")
     public void createNews() {
+        String uniqueTitle = "Автотест " + System.currentTimeMillis();
         mainPage
                 .goToAllNews()
                 .openControlPanel()
                 .clickAdd()
                 .fillCategory(TestData.CATEGORY)
-                .fillTitle(TestData.TITLE)
+                .fillTitle(uniqueTitle)
                 .fillDate(TestData.DATE)
                 .fillTime(TestData.TIME)
                 .fillDescription(TestData.DESCRIPTION)
                 .setActive(true)
                 .save()
-                .checkControlPanelVisible();
+                .checkNewsWithTitleVisible(uniqueTitle);
     }
 
     @Test
@@ -61,7 +57,8 @@ public class NewsTests extends BaseTest {
                 .fillTime(TestData.TIME)
                 .fillDescription(TestData.DESCRIPTION)
                 .setActive(true)
-                .cancel();
+                .save()
+                .checkErrorToast("Fill empty fields");
     }
 
     @Test
@@ -77,7 +74,8 @@ public class NewsTests extends BaseTest {
                 .fillDate(TestData.DATE)
                 .fillTime(TestData.TIME)
                 .setActive(true)
-                .cancel();
+                .save()
+                .checkErrorToast("Fill empty fields");
     }
 
     @Test
@@ -112,12 +110,11 @@ public class NewsTests extends BaseTest {
     @Story("Фильтрация новостей")
     @Description("Проверка применения фильтра новостей")
     public void openFilterAndApplyFilter() {
-        NewsPage newsPage = mainPage.goToAllNews();
-        newsPage.openFilter();
-        newsPage.checkFilterScreenVisible();
-        Allure.step("Нажатие кнопки FILTER");
-        onView(withText("FILTER")).perform(click());
-        Allure.step("Проверка, что вернулись на экран новостей");
-        newsPage.checkNewsScreenVisible();
+        mainPage
+                .goToAllNews()
+                .openFilter()
+                .checkFilterScreenVisible()
+                .applyFilter()
+                .checkNewsScreenVisible();
     }
 }

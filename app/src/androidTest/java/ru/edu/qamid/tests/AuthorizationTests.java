@@ -1,10 +1,5 @@
 package ru.edu.qamid.tests;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Test;
@@ -15,7 +10,6 @@ import io.qameta.allure.kotlin.Description;
 import io.qameta.allure.kotlin.Epic;
 import io.qameta.allure.kotlin.Feature;
 import io.qameta.allure.kotlin.Story;
-import ru.edu.qamid.R;
 import ru.edu.qamid.pages.AuthorizationPage;
 import ru.edu.qamid.utils.TestData;
 
@@ -23,6 +17,8 @@ import ru.edu.qamid.utils.TestData;
 @Epic("Авторизация")
 @Feature("Вход в приложение")
 public class AuthorizationTests extends BaseTest {
+
+    private final AuthorizationPage authPage = new AuthorizationPage();
 
     @Test
     @Story("Позитивный сценарий")
@@ -34,26 +30,24 @@ public class AuthorizationTests extends BaseTest {
 
     @Test
     @Story("Негативный сценарий")
-    @Description("Проверка, что вход не выполняется при пустых полях")
+    @Description("Проверка ошибки при пустых полях логина и пароля")
     public void loginWithEmptyFields() {
         mainPage.logout();
-        AuthorizationPage authPage = new AuthorizationPage();
-        authPage.clickSignIn();
-        Allure.step("Проверка, что остались на экране авторизации");
-        onView(withId(R.id.login_edit_text)).check(matches(isDisplayed()));
+        authPage
+                .clickSignInWithError()
+                .checkErrorToast("Login and password cannot be empty");
     }
 
     @Test
     @Story("Негативный сценарий")
-    @Description("Проверка, что вход не выполняется при неверном пароле")
+    @Description("Проверка ошибки при неверном пароле")
     public void loginWithWrongPassword() {
         mainPage.logout();
-        AuthorizationPage authPage = new AuthorizationPage();
-        authPage.enterLogin(TestData.VALID_LOGIN);
-        authPage.enterPassword(TestData.INVALID_PASSWORD);
-        authPage.clickSignIn();
-        Allure.step("Проверка, что остались на экране авторизации");
-        onView(withId(R.id.login_edit_text)).check(matches(isDisplayed()));
+        authPage
+                .enterLogin(TestData.VALID_LOGIN)
+                .enterPassword(TestData.INVALID_PASSWORD)
+                .clickSignInWithError()
+                .checkErrorToast("Something went wrong. Try again later.");
     }
 
     @Test
@@ -61,6 +55,6 @@ public class AuthorizationTests extends BaseTest {
     @Description("Проверка выхода из аккаунта через иконку человечка")
     public void logoutFromAccount() {
         mainPage.logout();
-        onView(withId(R.id.login_edit_text)).check(matches(isDisplayed()));
+        authPage.checkLoginScreenVisible();
     }
 }
