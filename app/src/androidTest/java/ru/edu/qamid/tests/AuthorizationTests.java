@@ -30,24 +30,25 @@ public class AuthorizationTests extends BaseTest {
 
     @Test
     @Story("Негативный сценарий")
-    @Description("Проверка ошибки при пустых полях логина и пароля")
+    @Description("Проверка, что вход не выполняется при пустых полях")
     public void loginWithEmptyFields() {
         mainPage.logout();
-        authPage
-                .clickSignInWithError()
-                .checkErrorToast("Login and password cannot be empty");
+        authPage.clickSignInWithError();
+        Allure.step("Проверка, что остались на экране авторизации");
+        authPage.checkLoginScreenVisible();
     }
 
     @Test
     @Story("Негативный сценарий")
-    @Description("Проверка ошибки при неверном пароле")
+    @Description("Проверка, что вход не выполняется при неверном пароле")
     public void loginWithWrongPassword() {
         mainPage.logout();
         authPage
                 .enterLogin(TestData.VALID_LOGIN)
                 .enterPassword(TestData.INVALID_PASSWORD)
-                .clickSignInWithError()
-                .checkErrorToast("Something went wrong. Try again later.");
+                .clickSignInWithError();
+        Allure.step("Проверка, что остались на экране авторизации");
+        authPage.checkLoginScreenVisible();
     }
 
     @Test

@@ -1,10 +1,5 @@
 package ru.edu.qamid.tests;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Test;
@@ -15,12 +10,14 @@ import io.qameta.allure.kotlin.Description;
 import io.qameta.allure.kotlin.Epic;
 import io.qameta.allure.kotlin.Feature;
 import io.qameta.allure.kotlin.Story;
-import ru.edu.qamid.R;
+import ru.edu.qamid.pages.QuotesPage;
 
 @RunWith(AndroidJUnit4.class)
 @Epic("Цитаты")
 @Feature("Раздел Love is all")
 public class QuotesTests extends BaseTest {
+
+    private final QuotesPage quotesPage = new QuotesPage();
 
     @Test
     @Story("Открытие раздела цитат")
@@ -36,6 +33,6 @@ public class QuotesTests extends BaseTest {
     public void checkQuotesSectionOpened() {
         Allure.step("Переход в раздел цитат");
         mainPage.goToQuotes();
-        onView(withId(R.id.our_mission_image_button)).check(matches(isDisplayed()));
+        quotesPage.checkQuotesSectionOpened();
     }
 }

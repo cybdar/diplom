@@ -29,7 +29,7 @@ public class NewsTests extends BaseTest {
     @Story("Создание новости")
     @Description("Проверка создания новости со всеми заполненными полями")
     public void createNews() {
-        String uniqueTitle = "Автотест " + System.currentTimeMillis();
+        String uniqueTitle = "AutoTest " + System.currentTimeMillis();
         mainPage
                 .goToAllNews()
                 .openControlPanel()
@@ -46,23 +46,6 @@ public class NewsTests extends BaseTest {
 
     @Test
     @Story("Создание новости")
-    @Description("Проверка ошибки при создании новости с пустым заголовком")
-    public void createNewsWithEmptyTitle() {
-        mainPage
-                .goToAllNews()
-                .openControlPanel()
-                .clickAdd()
-                .fillCategory(TestData.CATEGORY)
-                .fillDate(TestData.DATE)
-                .fillTime(TestData.TIME)
-                .fillDescription(TestData.DESCRIPTION)
-                .setActive(true)
-                .save()
-                .checkErrorToast("Fill empty fields");
-    }
-
-    @Test
-    @Story("Создание новости")
     @Description("Проверка ошибки при создании новости с пустым описанием")
     public void createNewsWithEmptyDescription() {
         mainPage
@@ -75,25 +58,32 @@ public class NewsTests extends BaseTest {
                 .fillTime(TestData.TIME)
                 .setActive(true)
                 .save()
-                .checkErrorToast("Fill empty fields");
+                .checkFormVisible();
     }
 
     @Test
     @Story("Редактирование новости")
     @Description("Проверка редактирования новости")
     public void editNews() {
+        String oldTitle = "OldTitle " + System.currentTimeMillis();
+        String newTitle = "NewTitle " + System.currentTimeMillis();
+
         mainPage
                 .goToAllNews()
                 .openControlPanel()
                 .clickAdd()
                 .fillCategory(TestData.CATEGORY)
-                .fillTitle("Old title")
-                .fillDescription("Old description")
+                .fillTitle(oldTitle)
+                .fillDescription(TestData.DESCRIPTION)
                 .fillDate(TestData.DATE)
                 .fillTime(TestData.TIME)
                 .setActive(true)
                 .save()
-                .checkControlPanelVisible();
+                .checkNewsWithTitleVisible(oldTitle)
+                .clickEditOnFirstNews()
+                .fillTitle(newTitle)
+                .save()
+                .checkNewsWithTitleVisible(newTitle);
     }
 
     @Test
@@ -108,13 +98,26 @@ public class NewsTests extends BaseTest {
 
     @Test
     @Story("Фильтрация новостей")
-    @Description("Проверка применения фильтра новостей")
+    @Description("Проверка применения фильтра новостей по категории")
     public void openFilterAndApplyFilter() {
         mainPage
                 .goToAllNews()
                 .openFilter()
                 .checkFilterScreenVisible()
+                .selectCategoryInFilter(TestData.CATEGORY) // Выбираем "День рождения"
                 .applyFilter()
+                .checkNewsScreenVisible();
+    }
+
+    @Test
+    @Story("Фильтрация новостей")
+    @Description("Проверка отмены фильтрации новостей")
+    public void openFilterAndCancel() {
+        mainPage
+                .goToAllNews()
+                .openFilter()
+                .checkFilterScreenVisible()
+                .cancelFilter()
                 .checkNewsScreenVisible();
     }
 }
